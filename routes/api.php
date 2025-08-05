@@ -7,6 +7,11 @@ use App\Http\Controllers\Api\WarehouseController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
+// Test route
+Route::get('/test', function () {
+    return response()->json(['message' => 'API is working']);
+});
+
 // Authentication routes
 Route::post('/login', [AuthController::class, 'login']);
 
