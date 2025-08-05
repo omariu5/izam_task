@@ -210,4 +210,6 @@ curl -X GET http://localhost:8000/api/warehouses/1/inventory \
 
 ## License
 
-[MIT License](LICENSE.md)
+[MIT License](https://opensource.org/licenses/MIT)
+
+This project is licensed under the MIT License - see the above link for details.
