@@ -3,49 +3,24 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Models\Stock;
-use Illuminate\Http\Request;
+use App\Http\Requests\InventoryIndexRequest;
+use App\Http\Resources\InventoryItemResource;
+use App\Repositories\InventoryItemRepository;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
 class InventoryController extends Controller
 {
-    public function index(Request $request)
+    public function __construct(
+        private readonly InventoryItemRepository $repository
+    ) {}
+
+    public function index(InventoryIndexRequest $request): AnonymousResourceCollection
     {
-        $query = Stock::query()
-            ->with(['inventoryItem', 'warehouse'])
-            ->select('stocks.*');
+        $inventory = $this->repository->getPaginatedList(
+            $request->validated(),
+            $request->input('per_page', 15)
+        );
 
-        // Filter by name
-        if ($request->has('name')) {
-            $query->whereHas('inventoryItem', function ($q) use ($request) {
-                $q->where('name', 'like', '%' . $request->name . '%');
-            });
-        }
-
-        // Filter by SKU
-        if ($request->has('sku')) {
-            $query->whereHas('inventoryItem', function ($q) use ($request) {
-                $q->where('sku', $request->sku);
-            });
-        }
-
-        // Filter by price range
-        if ($request->has('min_price')) {
-            $query->whereHas('inventoryItem', function ($q) use ($request) {
-                $q->where('price', '>=', $request->min_price);
-            });
-        }
-
-        if ($request->has('max_price')) {
-            $query->whereHas('inventoryItem', function ($q) use ($request) {
-                $q->where('price', '<=', $request->max_price);
-            });
-        }
-
-        // Filter by warehouse
-        if ($request->has('warehouse_id')) {
-            $query->where('warehouse_id', $request->warehouse_id);
-        }
-
-        return $query->paginate(15);
+        return InventoryItemResource::collection($inventory);
     }
 }

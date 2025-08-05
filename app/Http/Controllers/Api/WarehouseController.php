@@ -3,15 +3,19 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Models\Warehouse;
-use Illuminate\Http\Request;
+use App\Http\Resources\StockResource;
+use App\Repositories\WarehouseRepository;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
 class WarehouseController extends Controller
 {
-    public function inventory(Warehouse $warehouse)
+    public function __construct(
+        private readonly WarehouseRepository $repository
+    ) {}
+
+    public function inventory(int $id): AnonymousResourceCollection
     {
-        return $warehouse->stocks()
-            ->with('inventoryItem')
-            ->paginate(15);
+        $inventory = $this->repository->getInventory($id);
+        return StockResource::collection($inventory);
     }
 }
