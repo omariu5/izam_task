@@ -156,11 +156,6 @@ curl -X GET http://localhost:8000/api/warehouses/1/inventory \
    chmod 777 database
    ```
 
-3. **SELinux Issues (Linux)**
-   ```bash
-   # Allow Apache/PHP to write to the directory
-   chcon -Rt httpd_sys_rw_content_t database/
-   ```
 
 ### Common Issues
 
@@ -186,14 +181,24 @@ curl -X GET http://localhost:8000/api/warehouses/1/inventory \
    LOW_STOCK_THRESHOLD=10
    ```
 
-## Features
-
-- 🏭 Warehouse Management
-- 📦 Inventory Tracking
-- 🔄 Stock Transfers
-- 📊 Stock Level Monitoring
-- 🔐 API Authentication
-- 📝 Detailed API Documentation
+5. **Email Notifications**
+   - Configure SMTP in `.env`:
+   ```env
+   MAIL_MAILER=smtp
+   MAIL_HOST=your-smtp-host
+   MAIL_PORT=587
+   MAIL_USERNAME=your-username
+   MAIL_PASSWORD=your-password
+   MAIL_ENCRYPTION=tls
+   MAIL_FROM_ADDRESS=your-email
+   ```
+   - Start queue worker:
+   ```bash
+   php artisan queue:work
+   ```
+   - If SMTP is not configured or queue worker is not running:
+     - Emails will be logged to `storage/logs/laravel.log`
+     - You can still track notification attempts in the logs
 
 ## Additional Notes
 
