@@ -1,0 +1,220 @@
+{
+	"info": {
+		"_postman_id": "random-uuid",
+		"name": "Inventory Management API",
+		"description": "API collection for the inventory management system",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Authentication",
+			"item": [
+				{
+					"name": "Login",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"admin@example.com\",\n    \"password\": \"password\",\n    \"device_name\": \"postman\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/login",
+							"host": ["{{base_url}}"],
+							"path": ["api", "login"]
+						},
+						"description": "Login to get an access token"
+					}
+				},
+				{
+					"name": "Logout",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/logout",
+							"host": ["{{base_url}}"],
+							"path": ["api", "logout"]
+						},
+						"description": "Logout and invalidate the current token"
+					}
+				}
+			]
+		},
+		{
+			"name": "Inventory",
+			"item": [
+				{
+					"name": "List Inventory",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/inventory?name=&sku=&min_price=&max_price=&warehouse_id=",
+							"host": ["{{base_url}}"],
+							"path": ["api", "inventory"],
+							"query": [
+								{
+									"key": "name",
+									"value": "",
+									"description": "Filter by item name"
+								},
+								{
+									"key": "sku",
+									"value": "",
+									"description": "Filter by SKU"
+								},
+								{
+									"key": "min_price",
+									"value": "",
+									"description": "Minimum price"
+								},
+								{
+									"key": "max_price",
+									"value": "",
+									"description": "Maximum price"
+								},
+								{
+									"key": "warehouse_id",
+									"value": "",
+									"description": "Filter by warehouse"
+								}
+							]
+						},
+						"description": "Get paginated inventory list with optional filters"
+					}
+				}
+			]
+		},
+		{
+			"name": "Stock Transfers",
+			"item": [
+				{
+					"name": "Create Stock Transfer",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"inventory_item_id\": 1,\n    \"from_warehouse_id\": 1,\n    \"to_warehouse_id\": 2,\n    \"quantity\": 10\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/stock-transfers",
+							"host": ["{{base_url}}"],
+							"path": ["api", "stock-transfers"]
+						},
+						"description": "Transfer stock between warehouses"
+					}
+				}
+			]
+		},
+		{
+			"name": "Warehouses",
+			"item": [
+				{
+					"name": "Get Warehouse Inventory",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/warehouses/1/inventory",
+							"host": ["{{base_url}}"],
+							"path": ["api", "warehouses", "1", "inventory"]
+						},
+						"description": "Get inventory for a specific warehouse"
+					}
+				}
+			]
+		}
+	],
+	"variable": [
+		{
+			"key": "base_url",
+			"value": "http://localhost:8000"
+		},
+		{
+			"key": "access_token",
+			"value": "your_access_token_here"
+		}
+	]
+}
